@@ -19,7 +19,8 @@ max_depth=10
 n_estimators=20
 
 # Mention yout experiment below
-mlflow.set_experiment("MLOps experiment demo ") # This is an important code in which we can give name for particular experiment for every file, where each file's change will be saved along with its params, artifacts, metrics in separate folder
+mlflow.autolog() # This is used to automatically log all the parameters, metrics, artifacts, and models without explicitly calling log_param, log_metric, etc.
+mlflow.set_experiment("MLOps auto log experiment ") # This is an important code in which we can give name for particular experiment for every file, where each file's change will be saved along with its params, artifacts, metrics in separate folder
 
 with mlflow.start_run():
     model=RandomForestClassifier(max_depth=max_depth,n_estimators=n_estimators,random_state=42)
@@ -36,22 +37,10 @@ with mlflow.start_run():
     plt.xlabel("Predicted")
     plt.savefig("confusion_matrix.png")
     
-    #save logs 
-    #save metrics
-    mlflow.log_metric('accuracy',accuracy_score) #used to save logs for metrics
-    
-    #save parameters
-    mlflow.log_param('max_depth',max_depth) #used for parameters
-    mlflow.log_param('n_estimators',n_estimators) #same as above
-    
-    #save files and artifacts
-    mlflow.log_artifact("confusion_matrix.png") # used to log images plots, files etc
     mlflow.log_artifact(__file__) # here the python file itself is logged
     
     #save tags
     mlflow.set_tags({"author":"Bhuvnn","Project":"Wine Classification"})
     
-    #log the model
-    mlflow.sklearn.log_model(model,"RandomForest Model")
     print(round(accuracy_score*100,2))
     
